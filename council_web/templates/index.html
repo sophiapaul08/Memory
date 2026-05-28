@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Council — 5 Winkel · 5 Meinungen · 1 Idee</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #EEECE8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Header tagline ── */
+    .tagline {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* ── Input badge ── */
+    .input-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1A1A1A;
+      color: #fff;
+      border-radius: 14px;
+      padding: 14px 22px;
+      width: 100%;
+      max-width: 540px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .input-badge .badge-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .input-badge .badge-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .input-badge textarea {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      width: 100%;
+      resize: none;
+      font-family: inherit;
+      line-height: 1.4;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .input-badge textarea::placeholder { color: #666; }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      background: #1A1A1A;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-bottom: 36px;
+      transition: background 0.2s;
+      align-self: flex-end;
+      max-width: 540px;
+      width: 100%;
+    }
+    .submit-btn:hover { background: #333; }
+    .submit-btn:disabled { background: #888; cursor: not-allowed; }
+
+    /* ── Connector line ── */
+    .connector {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, #555, #bbb);
+      margin: 0 auto 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Cards grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 0;
+    }
+
+    /* ── Single advisor card ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border-top: 4px solid var(--accent);
+      padding: 20px 22px 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.10); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card-icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .card-title {
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.65;
+      min-height: 60px;
+      white-space: pre-wrap;
+    }
+
+    .card-body .placeholder {
+      color: #bbb;
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    .card-loading {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1s ease-in-out infinite;
+      margin-left: 4px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      font-size: 12px;
+      color: #999;
+      margin: 18px 0 0;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <p class="tagline">5 Winkel &nbsp;·&nbsp; 5 Meinungen &nbsp;·&nbsp; 1 Idee</p>
+
+  <!-- Input -->
+  <div class="input-badge">
+    <span class="badge-icon">💡</span>
+    <div style="flex:1">
+      <span class="badge-label">Input &nbsp;/&nbsp; Deine Idee</span>
+      <textarea id="question" rows="2" placeholder="Stelle deine Frage oder Idee …"></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="askCouncil()">
+    Council befragen &rarr;
+  </button>
+
+  <div class="connector"></div>
+
+  <!-- Cards -->
+  <div class="cards-grid">
+    {% for adv in advisors %}
+    <div class="card" id="card-{{ adv.id }}"
+         style="--accent: {{ adv.color }}; --bg-light: {{ adv.bg }}">
+      <div class="card-header">
+        <div class="card-icon-circle">{{ adv.icon }}</div>
+        <div>
+          <span class="card-name">{{ adv.name }}</span>
+          <div class="card-title">{{ adv.title }}</div>
+        </div>
+      </div>
+      <div class="card-body" id="body-{{ adv.id }}">
+        <span class="placeholder">Wartet auf deine Frage …</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <p class="status-bar" id="statusBar">&nbsp;</p>
+
+  <script>
+    async function askCouncil() {
+      const question = document.getElementById('question').value.trim();
+      if (!question) {
+        document.getElementById('statusBar').textContent = 'Bitte erst eine Frage eingeben.';
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Berater denken …';
+
+      const advisorIds = {{ advisors | map(attribute='id') | list | tojson }};
+
+      advisorIds.forEach(id => {
+        const body = document.getElementById('body-' + id);
+        body.innerHTML = '<span class="card-loading"></span>';
+      });
+
+      document.getElementById('statusBar').textContent = 'Alle 5 Berater werden parallel befragt …';
+
+      try {
+        const resp = await fetch('/council', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (!raw) continue;
+            try {
+              const data = JSON.parse(raw);
+              if (data.error) {
+                document.getElementById('statusBar').textContent = 'Fehler: ' + data.error;
+                continue;
+              }
+              if (data.results) {
+                Object.entries(data.results).forEach(([id, text]) => {
+                  const body = document.getElementById('body-' + id);
+                  if (body) body.textContent = text;
+                });
+                document.getElementById('statusBar').textContent =
+                  'Alle Berater haben geantwortet.';
+              }
+            } catch (_) {}
+          }
+        }
+      } catch (err) {
+        document.getElementById('statusBar').textContent = 'Netzwerkfehler: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Council befragen →';
+      }
+    }
+
+    // Submit on Ctrl+Enter
+    document.getElementById('question').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.ctrlKey) askCouncil();
+    });
+  </script>
+</body>
+</html>
